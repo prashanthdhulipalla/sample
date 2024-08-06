@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="https://www.omg.org/spec/DMN/20191111/MODEL/" xmlns:dmndi="https://www.omg.org/spec/DMN/20191111/DMNDI/" xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_1jpvna5" name="DRD" namespace="http://camunda.org/schema/1.0/dmn" exporter="Camunda Modeler" exporterVersion="5.25.0" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.21.0">
+  <decision id="approvalDecision" name="Approval Decision">
+    <decisionTable id="approvalTable" hitPolicy="FIRST">
+      <input id="creditApprovedInput" label="Credit Approved">
+        <inputExpression id="creditApprovedExpression" typeRef="boolean">
+          <text>Approved</text>
+        </inputExpression>
+      </input>
+      <input id="incomeInput" label="Income">
+        <inputExpression id="incomeExpression" typeRef="integer">
+          <text>income</text>
+        </inputExpression>
+      </input>
+      <output id="finalDecisionOutput" label="Final Decision" name="Final Decision" typeRef="string" />
+      <rule id="rule1">
+        <inputEntry id="creditApprovedEntry1">
+          <text>true</text>
+        </inputEntry>
+        <inputEntry id="incomeEntry1">
+          <text>&gt;=50000</text>
+        </inputEntry>
+        <outputEntry id="finalDecisionEntry1">
+          <text>Approved</text>
+        </outputEntry>
+      </rule>
+      <rule id="rule2">
+        <inputEntry id="creditApprovedEntry2">
+          <text>false</text>
+        </inputEntry>
+        <inputEntry id="incomeEntry2">
+          <text>-</text>
+        </inputEntry>
+        <outputEntry id="finalDecisionEntry2">
+          <text>Denied</text>
+        </outputEntry>
+      </rule>
+      <rule id="rule3">
+        <inputEntry id="creditApprovedEntry3">
+          <text>true</text>
+        </inputEntry>
+        <inputEntry id="incomeEntry3">
+          <text>&lt;=50000</text>
+        </inputEntry>
+        <outputEntry id="finalDecisionEntry3">
+          <text>Conditionally Approved</text>
+        </outputEntry>
+      </rule>
+    </decisionTable>
+  </decision>
+  <dmndi:DMNDI>
+    <dmndi:DMNDiagram>
+      <dmndi:DMNShape dmnElementRef="approvalDecision">
+        <dc:Bounds height="80" width="180" x="160" y="100" />
+      </dmndi:DMNShape>
+    </dmndi:DMNDiagram>
+  </dmndi:DMNDI>
+</definitions>

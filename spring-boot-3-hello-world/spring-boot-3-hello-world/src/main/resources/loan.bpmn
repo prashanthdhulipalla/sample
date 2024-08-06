@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_0kkd74t" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.25.0">
+    <bpmn:process id="loanProcess" name="Loan Process" isExecutable="true">
+        <bpmn:startEvent id="startEvent" name="Start">
+            <bpmn:outgoing>flow1</bpmn:outgoing>
+        </bpmn:startEvent>
+        <bpmn:businessRuleTask id="creditCheckTask" name="Credit Check" camunda:resultVariable="Approved" camunda:decisionRef="creditCheckDecision" camunda:mapDecisionResult="singleEntry">
+            <bpmn:extensionElements>
+                <camunda:inputOutput>
+                    <camunda:outputParameter name="Approved">${Approved}</camunda:outputParameter>
+                </camunda:inputOutput>
+            </bpmn:extensionElements>
+            <bpmn:incoming>flow1</bpmn:incoming>
+            <bpmn:outgoing>flow2</bpmn:outgoing>
+        </bpmn:businessRuleTask>
+        <bpmn:sequenceFlow id="flow1" name="flow1" sourceRef="startEvent" targetRef="creditCheckTask" />
+        <bpmn:exclusiveGateway id="exclusiveGateway" name="Credit Approved?">
+            <bpmn:incoming>flow2</bpmn:incoming>
+            <bpmn:outgoing>flow3</bpmn:outgoing>
+            <bpmn:outgoing>flow4</bpmn:outgoing>
+        </bpmn:exclusiveGateway>
+        <bpmn:sequenceFlow id="flow2" name="flow2" sourceRef="creditCheckTask" targetRef="exclusiveGateway" />
+        <bpmn:sequenceFlow id="flow3" name="Verify Success" sourceRef="exclusiveGateway" targetRef="approvalTask">
+            <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${Approved == true}</bpmn:conditionExpression>
+        </bpmn:sequenceFlow>
+        <bpmn:sequenceFlow id="flow4" name="Verify Failed" sourceRef="exclusiveGateway" targetRef="endEvent">
+            <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${Approved == false}</bpmn:conditionExpression>
+        </bpmn:sequenceFlow>
+        <bpmn:businessRuleTask id="approvalTask" name="Approval Decision" camunda:decisionRef="approvalDecision">
+            <bpmn:incoming>flow3</bpmn:incoming>
+            <bpmn:outgoing>flow5</bpmn:outgoing>
+        </bpmn:businessRuleTask>
+        <bpmn:endEvent id="endEvent" name="End">
+            <bpmn:incoming>flow5</bpmn:incoming>
+            <bpmn:incoming>flow4</bpmn:incoming>
+        </bpmn:endEvent>
+        <bpmn:sequenceFlow id="flow5" name="flow5" sourceRef="approvalTask" targetRef="endEvent" />
+    </bpmn:process>
+    <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+        <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="loanProcess">
+            <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="startEvent">
+                <dc:Bounds x="179" y="99" width="36" height="36" />
+                <bpmndi:BPMNLabel>
+                    <dc:Bounds x="185" y="142" width="25" height="14" />
+                </bpmndi:BPMNLabel>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape id="Activity_0pij743_di" bpmnElement="creditCheckTask">
+                <dc:Bounds x="344" y="77" width="100" height="80" />
+                <bpmndi:BPMNLabel />
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape id="Gateway_009unni_di" bpmnElement="exclusiveGateway" isMarkerVisible="true">
+                <dc:Bounds x="588" y="92" width="50" height="50" />
+                <bpmndi:BPMNLabel>
+                    <dc:Bounds x="570" y="68" width="85" height="14" />
+                </bpmndi:BPMNLabel>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape id="Activity_01i64kf_di" bpmnElement="approvalTask">
+                <dc:Bounds x="790" y="77" width="100" height="80" />
+                <bpmndi:BPMNLabel />
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape id="Event_0gdbb9i_di" bpmnElement="endEvent">
+                <dc:Bounds x="1042" y="99" width="36" height="36" />
+                <bpmndi:BPMNLabel>
+                    <dc:Bounds x="1050" y="75" width="20" height="14" />
+                </bpmndi:BPMNLabel>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNEdge id="Flow_101ylzj_di" bpmnElement="flow1">
+                <di:waypoint x="215" y="117" />
+                <di:waypoint x="344" y="117" />
+                <bpmndi:BPMNLabel>
+                    <dc:Bounds x="304" y="99" width="25" height="14" />
+                </bpmndi:BPMNLabel>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge id="Flow_1embgn2_di" bpmnElement="flow2">
+                <di:waypoint x="444" y="117" />
+                <di:waypoint x="588" y="117" />
+                <bpmndi:BPMNLabel>
+                    <dc:Bounds x="548" y="99" width="25" height="14" />
+                </bpmndi:BPMNLabel>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge id="Flow_0bul4sr_di" bpmnElement="flow3">
+                <di:waypoint x="638" y="117" />
+                <di:waypoint x="790" y="117" />
+                <bpmndi:BPMNLabel>
+                    <dc:Bounds x="680" y="99" width="72" height="14" />
+                </bpmndi:BPMNLabel>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge id="Flow_05dcuyb_di" bpmnElement="flow4">
+                <di:waypoint x="613" y="142" />
+                <di:waypoint x="613" y="320" />
+                <di:waypoint x="1060" y="320" />
+                <di:waypoint x="1060" y="135" />
+                <bpmndi:BPMNLabel>
+                    <dc:Bounds x="807" y="302" width="60" height="14" />
+                </bpmndi:BPMNLabel>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge id="Flow_0w38j3o_di" bpmnElement="flow5">
+                <di:waypoint x="890" y="117" />
+                <di:waypoint x="1042" y="117" />
+                <bpmndi:BPMNLabel>
+                    <dc:Bounds x="954" y="99" width="25" height="14" />
+                </bpmndi:BPMNLabel>
+            </bpmndi:BPMNEdge>
+        </bpmndi:BPMNPlane>
+    </bpmndi:BPMNDiagram>
+</bpmn:definitions>
